@@ -1,21 +1,21 @@
 {
-  "name": "octo-mantle",
+  "name": "octo-head",
   "version": "0.0.1",
   "description": "The central hub for the octo system.",
-  "main": "mantle.js",
+  "main": "head.js",
   "scripts": {
     "test": "npm test"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Ronin11/octo-mantle.git"
+    "url": "git+https://github.com/Ronin11/octo-head.git"
   },
   "author": "Ronin11",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Ronin11/octo-mantle/issues"
+    "url": "https://github.com/Ronin11/octo-head/issues"
   },
-  "homepage": "https://github.com/Ronin11/octo-mantle#readme",
+  "homepage": "https://github.com/Ronin11/octo-head#readme",
   "dependencies": {
     "express": "^4.15.3",
     "socket.io": "^2.0.3"
