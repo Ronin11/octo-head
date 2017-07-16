@@ -14,6 +14,10 @@ io.on('connection', function(socket){
 	});
 });
 
+app.get('/', function(req, res){
+	res.sendFile(__dirname + '/public/index.html');
+});
+
 server.listen(config.port, function listening() {
 	clog.i('Listening on port ', server.address().port);
 });
