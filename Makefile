@@ -18,6 +18,7 @@ clean:
 
 run: build
 	@echo "\n~~~~~~~ RUNNING ~~~~~~~"
+	export SERVER=$(NATS_SERVER); \
 	./$(APP_NAME)
 
 test:
