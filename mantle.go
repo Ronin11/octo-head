@@ -73,12 +73,12 @@ func main() {
 
 	network = octo.JoinNetwork(os.Getenv("SERVER"), octo.NATSNetwork)
 
-	// err := octo.CreateListener(network, func(message string, subject string) {
-	// 	fmt.Printf("Subject: %s \tMessage: %s\n", subject, message)
-	// })
-	// if err != nil{
-	// 	panic(err)
-	// }
+	err := octo.CreateListener(network, func(message string, subject string) {
+		fmt.Printf("Subject: %s \tMessage: %s\n", subject, message)
+	})
+	if err != nil{
+		panic(err)
+	}
 
 	router := httprouter.New()
 	router.GET("/discovery", discovery)
