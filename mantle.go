@@ -10,6 +10,7 @@ import (
 	"github.com/julienschmidt/httprouter"
 
 	"github.com/Ronin11/octo-tentacle/pkg/octo"
+	"github.com/Ronin11/octo-tentacle/services/sprinkler"
 )
 
 var network *octo.Network
@@ -27,44 +28,69 @@ func discovery(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 }
 
 func sprinkler0on(w http.ResponseWriter, r *http.Request, ps httprouter.Params){
-	messenger := octo.CreateMessenger("sprinkler.backyard.0.input", network)
-	duration := time.Second
-	time.Sleep(duration)
-	messenger.Write(`{"Name":"Action Description","State":{"sprinklerIsOn": true,"Duration":"SomeDuration"},"onDone":{"name": "ON DONE"}}`)
-	messenger.Subscribe(func(message string){
-		fmt.Println("RESPONSE: ", message)
-	})
+	action := sprinklerService.SprinklerAction{}
+	action.Channel = "sprinkler.backyard.0.input"
+	action.Name = "Sprinkler Start"
+	action.State = sprinklerService.SprinklerData{
+		SprinklerIsOn: true,
+	}
+	octo.SendAction(action, network)
 	fmt.Fprintf(w, "OK")
 }
 func sprinkler0off(w http.ResponseWriter, r *http.Request, ps httprouter.Params){
-	messenger := octo.CreateMessenger("sprinkler.backyard.0.input", network)
-	duration := time.Second
-	time.Sleep(duration)
-	messenger.Write(`{"Name":"Action Description","State":{"sprinklerIsOn": false,"Duration":"SomeDuration"},"onDone":{"name": "ON DONE"}}`)
-	messenger.Subscribe(func(message string){
-		fmt.Println("RESPONSE: ", message)
-	})
+	action := sprinklerService.SprinklerAction{}
+	action.Channel = "sprinkler.backyard.0.input"
+	action.Name = "Sprinkler End"
+	action.State = sprinklerService.SprinklerData{
+		SprinklerIsOn: false,
+	}
+	octo.SendAction(action, network)
 	fmt.Fprintf(w, "OK")
 }
 
 func sprinkler1on(w http.ResponseWriter, r *http.Request, ps httprouter.Params){
-	messenger := octo.CreateMessenger("sprinkler.backyard.1.input", network)
-	duration := time.Second
-	time.Sleep(duration)
-	messenger.Write(`{"Name":"Action Description","State":{"sprinklerIsOn": true,"Duration":"SomeDuration"},"onDone":{"name": "ON DONE"}}`)
-	messenger.Subscribe(func(message string){
-		fmt.Println("RESPONSE: ", message)
-	})
+	action := sprinklerService.SprinklerAction{}
+	action.Channel = "sprinkler.backyard.1.input"
+	action.Name = "Sprinkler Start"
+	action.State = sprinklerService.SprinklerData{
+		SprinklerIsOn: true,
+	}
+	octo.SendAction(action, network)
 	fmt.Fprintf(w, "OK")
 }
+
 func sprinkler1off(w http.ResponseWriter, r *http.Request, ps httprouter.Params){
-	messenger := octo.CreateMessenger("sprinkler.backyard.1.input", network)
-	duration := time.Second
-	time.Sleep(duration)
-	messenger.Write(`{"Name":"Action Description","State":{"sprinklerIsOn": false,"Duration":"SomeDuration"},"onDone":{"name": "ON DONE"}}`)
-	messenger.Subscribe(func(message string){
-		fmt.Println("RESPONSE: ", message)
-	})
+
+	action := sprinklerService.SprinklerAction{}
+	action.Channel = "sprinkler.backyard.1.input"
+	action.Name = "Sprinkler End"
+	action.State = sprinklerService.SprinklerData{
+		SprinklerIsOn: false,
+	}
+	octo.SendAction(action, network)
+	fmt.Fprintf(w, "OK")
+}
+
+func startSprinklers(w http.ResponseWriter, r *http.Request, ps httprouter.Params){
+
+	finalAction := sprinklerService.SprinklerAction{}
+	finalAction.Channel = "sprinkler.backyard.1.input"
+	finalAction.Name = "Sprinkler End"
+	finalAction.State = sprinklerService.SprinklerData{
+		SprinklerIsOn: true,
+		Duration: 10,
+	}
+	
+
+	intialAction := sprinklerService.SprinklerAction{}
+	intialAction.Channel = "sprinkler.backyard.0.input"
+	intialAction.Name = "Sprinkler End"
+	intialAction.State = sprinklerService.SprinklerData{
+		SprinklerIsOn: true,
+		Duration: 5,
+	}
+	intialAction.OnDone = finalAction
+	octo.SendAction(intialAction, network)
 	fmt.Fprintf(w, "OK")
 }
 
@@ -82,6 +108,7 @@ func main() {
 
 	router := httprouter.New()
 	router.GET("/discovery", discovery)
+	router.GET("/startSprinklers", startSprinklers)
 	router.GET("/sprinkler0on", sprinkler0on)
 	router.GET("/sprinkler0off", sprinkler0off)
 	router.GET("/sprinkler1on", sprinkler1on)
